@@ -1,0 +1,39 @@
+{
+  "name": "rubberducky",
+  "version": "1.0.0",
+  "description": "fluid simulation with rubber ducky",
+  "main": "webpack.config.js",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "production": "webpack -p",
+    "lint": "./node_modules/.bin/eslint ./src/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miguel-sc/RubberDucky.git"
+  },
+  "keywords": [
+    "rubberducky"
+  ],
+  "author": "Miguel Santos Correa",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/miguel-sc/RubberDucky/issues"
+  },
+  "homepage": "https://github.com/miguel-sc/RubberDucky#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.16.0",
+    "file-loader": "^1.1.6",
+    "html-webpack-plugin": "^2.30.1",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.11.1"
+  },
+  "dependencies": {
+    "pixi.js": "^4.7.0"
+  }
+}
