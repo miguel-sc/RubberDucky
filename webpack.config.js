@@ -1,4 +1,5 @@
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 var HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   template: __dirname + '/src/index.html',
@@ -14,7 +15,7 @@ module.exports = {
   entry: entrypoint,
   output: {
     path: __dirname + '/dist',
-    filename: 'rubberducky.bundle.js'
+    filename: 'rubberducky.js'
   },
   module: {
     rules: [
@@ -24,13 +25,29 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            { loader: 'css-loader', options: { minimize: true } }
+          ]
+        })
+      },
+      {
         test: /\.ico$/,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]'
         }
+      },
+      {
+        test: /liquidfun\.min\.js$/,
+        use: [ 'script-loader' ]
       }
     ]
   },
-  plugins: [HtmlWebpackPluginConfig]
+  plugins: [
+    HtmlWebpackPluginConfig,
+    new ExtractTextPlugin('index.css')
+  ]
 }
