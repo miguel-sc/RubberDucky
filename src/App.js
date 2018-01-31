@@ -3,6 +3,7 @@ import { Application } from 'pixi.js'
 class App extends Application {
   constructor(options) {
     super(options)
+    this.renderer.render(this.stage)
   }
 }
 
