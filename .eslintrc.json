@@ -25,5 +25,8 @@
             "error",
             "never"
         ]
+    },
+    "globals": {
+      "Box2D": false
     }
 }
