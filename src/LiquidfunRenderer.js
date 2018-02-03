@@ -1,15 +1,21 @@
 import { ObjectRenderer } from 'pixi.js'
 
-function highest2(x) {
-  return Math.pow(2, Math.ceil(Math.log(x) / Math.LN2))
+function highest2(v) {
+  // compute the next highest power of 2 of 32-bit v
+  v--
+  v |= v >> 1
+  v |= v >> 2
+  v |= v >> 4
+  v |= v >> 8
+  v |= v >> 16
+  v++
+  return v
 }
 
 export default class LiquidfunRenderer extends ObjectRenderer {
   constructor(renderer) {
     super(renderer)
     this.renderer = renderer
-    this.currentBatchSize = 0
-    this.sprites = []
     this.quad = new Float32Array([
       -1, -1, 1, -1, -1, 1, 1, 1
     ])
@@ -56,7 +62,6 @@ export default class LiquidfunRenderer extends ObjectRenderer {
     let renderer = this.renderer
     let gl = renderer.gl
 
-    // some hacky magic (thanks ivan)
     renderer.bindVao(null)
     renderer._activeShader = null
     renderer.bindTexture(null, 0, true)
@@ -71,7 +76,6 @@ export default class LiquidfunRenderer extends ObjectRenderer {
     gl.enable(gl.BLEND)
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
     gl.disable(gl.DEPTH_TEST)
-    //gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     let count = sprite.particleSystem.GetParticleCount()
     let radius = sprite.particleSystem.GetRadius()
@@ -79,8 +83,6 @@ export default class LiquidfunRenderer extends ObjectRenderer {
     if (count > 0) {
       let w = gl.canvas.width
       let h = gl.canvas.height
-      let fx = 0
-      let fy = 0
 
       // start with ball shader
       sprite.ball_shader.bind()
@@ -90,14 +92,12 @@ export default class LiquidfunRenderer extends ObjectRenderer {
       let pos_offset = sprite.particleSystem.GetPositionBuffer()
       // read memory into JS Array
       let raw_pos = new Float32Array(Box2D.HEAPU8.buffer, pos_offset.e, count * 2)
-
       // initalize new Array for corrected values
       let position = new Float32Array(count * 2)
       // transform physics engine coords to renderer coords
-      let PTM = 1
       for (let i = 0; i < count; i++) {
-        position[i * 2]   = (raw_pos[i * 2]   - fx) * 2 * PTM / w
-        position[i * 2 + 1] = -(raw_pos[i * 2 + 1] - fy) * 2 * PTM / h
+        position[i * 2]   = raw_pos[i * 2] * 2 / w
+        position[i * 2 + 1] = - raw_pos[i * 2 + 1] * 2 / h
       }
       // upload data to gpu
       gl.bindBuffer(gl.ARRAY_BUFFER, sprite.pos_buffer)
@@ -106,24 +106,10 @@ export default class LiquidfunRenderer extends ObjectRenderer {
       gl.enableVertexAttribArray(positionHandle)
       gl.vertexAttribPointer(positionHandle, 2, gl.FLOAT, false, 0, 0)
 
-      /* Color Buffer */
-      /*
-      // get pointer
-          let color_offset = sprite.particleSystem.GetColorBuffer();
-      // read memory into JS Array
-          let color = new Uint8Array(Module.HEAPU8.buffer, color_offset.e, count * 4);
-      // upload data to gpu
-          gl.bindBuffer(gl.ARRAY_BUFFER, sprite.color_buffer);
-          gl.bufferData(gl.ARRAY_BUFFER, color, gl.DYNAMIC_DRAW);
-          let colorHandle = sprite.ball_shader.attributes.color.location;
-          gl.enableVertexAttribArray(colorHandle);
-          gl.vertexAttribPointer(colorHandle, 4, gl.UNSIGNED_BYTE, false, 0, 0);
-          */
-
       this.swap()
       gl.bindTexture(gl.TEXTURE_2D, this.textures.front)
 
-      sprite.ball_shader.uniforms.size = radius * PTM * this.blurRadius
+      sprite.ball_shader.uniforms.size = radius * this.blurRadius
       gl.drawArrays(gl.POINTS, 0, count)
       this.swap()
 
