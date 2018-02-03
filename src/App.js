@@ -13,7 +13,7 @@ class App extends Application {
 
   init() {
     this.createParticleSystem()
-    this.spawnParticles(150, 0, 0)
+    this.spawnParticles(100, 0, 0)
     //console.log(this.particleSystemSprite.particleSystem.GetParticleCount())
 
     this.createBoundingBox()
@@ -89,7 +89,7 @@ class App extends Application {
     const psd = new Box2D.b2ParticleSystemDef()
     psd.set_radius(2.0)
     const particleSystem = this.world.CreateParticleSystem(psd)
-    particleSystem.SetMaxParticleCount(10000)
+    particleSystem.SetMaxParticleCount(4000)
     this.particleSystemSprite = new LiquidfunSprite(particleSystem)
     this.stage.addChild(this.particleSystemSprite)
   }
