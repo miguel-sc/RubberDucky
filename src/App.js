@@ -5,7 +5,7 @@ class App extends Application {
   constructor(options) {
     super(options)
     this.renderer.render(this.stage)
-    let gravity = new Box2D.b2Vec2(0, 200)
+    let gravity = new Box2D.b2Vec2(0, 400)
     this.world = new Box2D.b2World(gravity)
     this.sprites = []
     this.stage.position.set(window.innerWidth / 2, window.innerHeight / 2)
@@ -15,10 +15,13 @@ class App extends Application {
     this.createParticleSystem()
     this.spawnParticles(150, 0, 0)
     //console.log(this.particleSystemSprite.particleSystem.GetParticleCount())
-    this.ticker.add(() => this.update())
 
     this.createBoundingBox()
 
+    this.ticker.add(() => {
+      this.spawnRain()
+      this.update()
+    })
     /*this.ticker.add(() => {
       for (let i=0,s=this.sprites[i];i<this.sprites.length;s=this.sprites[++i]) {
         let pos = s.body.GetPosition()
@@ -29,8 +32,7 @@ class App extends Application {
   }
 
   update() {
-    this.world.Step(1/60, 8, 3)
-    //this.world.Step(1/60, 8, 3)
+    this.world.Step(1/60, 8, 3, 3)
   }
 
   createBoundingBox() {
@@ -42,14 +44,22 @@ class App extends Application {
     const y = this.renderer.height / 2
 
     const shape = new Box2D.b2EdgeShape()
-    shape.Set(new Box2D.b2Vec2(-x, -y),new Box2D.b2Vec2(-x, y))
+    shape.Set(new Box2D.b2Vec2(-x, -y), new Box2D.b2Vec2(-x, y))
     boundingbox.CreateFixture(shape, 0.0)
-    shape.Set(new Box2D.b2Vec2(-x, y),new Box2D.b2Vec2(x, y))
+    shape.Set(new Box2D.b2Vec2(-x, y), new Box2D.b2Vec2(x, y))
     boundingbox.CreateFixture(shape, 0.0)
-    shape.Set(new Box2D.b2Vec2(x, y),new Box2D.b2Vec2(x, -y))
+    shape.Set(new Box2D.b2Vec2(x, y), new Box2D.b2Vec2(x, -y))
     boundingbox.CreateFixture(shape, 0.0)
-    shape.Set(new Box2D.b2Vec2(x, -y),new Box2D.b2Vec2(-x, -y))
+    shape.Set(new Box2D.b2Vec2(x, -y), new Box2D.b2Vec2(-x, -y))
     boundingbox.CreateFixture(shape, 0.0)
+  }
+
+  spawnRain() {
+    const x = (Math.random() - 0.5) * this.renderer.width
+    let pd = new Box2D.b2ParticleDef()
+    pd.set_position(new Box2D.b2Vec2(x, -this.renderer.height / 2))
+    //pd.set_velocity(new Box2D.b2Vec2(0, 1000))
+    this.particleSystemSprite.particleSystem.CreateParticle(pd)
   }
 
   createBox(x, y, w, h, fixed) {
@@ -80,7 +90,7 @@ class App extends Application {
     let psd = new Box2D.b2ParticleSystemDef()
     psd.set_radius(2.0)
     let particleSystem = this.world.CreateParticleSystem(psd)
-    particleSystem.SetMaxParticleCount(20000)
+    particleSystem.SetMaxParticleCount(10000)
     this.particleSystemSprite = new LiquidfunSprite(particleSystem)
     this.stage.addChild(this.particleSystemSprite)
   }
