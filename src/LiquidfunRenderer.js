@@ -20,8 +20,8 @@ export default class LiquidfunRenderer extends ObjectRenderer {
       -1, -1, 1, -1, -1, 1, 1, 1
     ])
     this.textures = null
-    this.blurRadius = 2
-    this.threshold = 0.3
+    this.blurRadius = 3
+    this.threshold = 0.4
   }
 
   swap() {
@@ -96,7 +96,7 @@ export default class LiquidfunRenderer extends ObjectRenderer {
       let position = new Float32Array(count * 2)
       // transform physics engine coords to renderer coords
       for (let i = 0; i < count; i++) {
-        position[i * 2]   = raw_pos[i * 2] * 2 / w
+        position[i * 2] = raw_pos[i * 2] * 2 / w
         position[i * 2 + 1] = - raw_pos[i * 2 + 1] * 2 / h
       }
       // upload data to gpu
