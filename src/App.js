@@ -5,7 +5,7 @@ class App extends Application {
   constructor(options) {
     super(options)
     this.renderer.render(this.stage)
-    let gravity = new Box2D.b2Vec2(0, 400)
+    const gravity = new Box2D.b2Vec2(0, 400)
     this.world = new Box2D.b2World(gravity)
     this.sprites = []
     this.stage.position.set(window.innerWidth / 2, window.innerHeight / 2)
@@ -42,8 +42,8 @@ class App extends Application {
 
     const x = this.renderer.width / 2
     const y = this.renderer.height / 2
-
     const shape = new Box2D.b2EdgeShape()
+
     shape.Set(new Box2D.b2Vec2(-x, -y), new Box2D.b2Vec2(-x, y))
     boundingbox.CreateFixture(shape, 0.0)
     shape.Set(new Box2D.b2Vec2(-x, y), new Box2D.b2Vec2(x, y))
@@ -56,26 +56,25 @@ class App extends Application {
 
   spawnRain() {
     const x = (Math.random() - 0.5) * this.renderer.width
-    let pd = new Box2D.b2ParticleDef()
+    const pd = new Box2D.b2ParticleDef()
     pd.set_position(new Box2D.b2Vec2(x, -this.renderer.height / 2))
-    //pd.set_velocity(new Box2D.b2Vec2(0, 1000))
     this.particleSystemSprite.particleSystem.CreateParticle(pd)
   }
 
   createBox(x, y, w, h, fixed) {
-    let bd = new Box2D.b2BodyDef()
+    const bd = new Box2D.b2BodyDef()
     if (!fixed) {
       bd.set_type(2)
     }
     bd.set_position(new Box2D.b2Vec2(x, y))
 
-    let body = this.world.CreateBody(bd)
+    const body = this.world.CreateBody(bd)
 
-    let shape = new Box2D.b2PolygonShape
+    const shape = new Box2D.b2PolygonShape
     shape.SetAsBox(w, h)
     body.CreateFixture(shape, 0.5)
 
-    let sprite = Sprite.from(Texture.WHITE)
+    const sprite = Sprite.from(Texture.WHITE)
     // dunno why this has to be times 2
     sprite.width = w * 2
     sprite.height = h * 2
@@ -87,25 +86,23 @@ class App extends Application {
   }
 
   createParticleSystem() {
-    let psd = new Box2D.b2ParticleSystemDef()
+    const psd = new Box2D.b2ParticleSystemDef()
     psd.set_radius(2.0)
-    let particleSystem = this.world.CreateParticleSystem(psd)
+    const particleSystem = this.world.CreateParticleSystem(psd)
     particleSystem.SetMaxParticleCount(10000)
     this.particleSystemSprite = new LiquidfunSprite(particleSystem)
     this.stage.addChild(this.particleSystemSprite)
   }
 
   spawnParticles(radius, x, y) {
-    let color = new Box2D.b2ParticleColor(255, 255, 255, 255)
-    let pgd = new Box2D.b2ParticleGroupDef()
-    let shape = new Box2D.b2CircleShape()
+    const pgd = new Box2D.b2ParticleGroupDef()
+    const shape = new Box2D.b2CircleShape()
 
     shape.set_m_radius(radius)
     shape.set_m_p(new Box2D.b2Vec2(x, y))
     pgd.set_shape(shape)
-    pgd.set_color(color)
 
-    let group = this.particleSystemSprite.particleSystem.CreateParticleGroup(pgd)
+    const group = this.particleSystemSprite.particleSystem.CreateParticleGroup(pgd)
     return group
   }
 }

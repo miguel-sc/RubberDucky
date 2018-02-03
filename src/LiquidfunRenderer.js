@@ -25,8 +25,8 @@ export default class LiquidfunRenderer extends ObjectRenderer {
   }
 
   swap() {
-    let gl = this.renderer.gl
-    let temp = this.textures.front
+    const gl = this.renderer.gl
+    const temp = this.textures.front
     this.textures.front = this.textures.back
     this.textures.back = temp
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo)
@@ -46,8 +46,8 @@ export default class LiquidfunRenderer extends ObjectRenderer {
   }
 
   createTexture(gl) {
-    let tex = gl.createTexture()
-    let scale = this.texScale()
+    const tex = gl.createTexture()
+    const scale = this.texScale()
     gl.bindTexture(gl.TEXTURE_2D, tex)
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
@@ -59,8 +59,8 @@ export default class LiquidfunRenderer extends ObjectRenderer {
   }
 
   render(sprite) {
-    let renderer = this.renderer
-    let gl = renderer.gl
+    const renderer = this.renderer
+    const gl = renderer.gl
 
     renderer.bindVao(null)
     renderer._activeShader = null
@@ -77,21 +77,21 @@ export default class LiquidfunRenderer extends ObjectRenderer {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
     gl.disable(gl.DEPTH_TEST)
 
-    let count = sprite.particleSystem.GetParticleCount()
-    let radius = sprite.particleSystem.GetRadius()
+    const count = sprite.particleSystem.GetParticleCount()
+    const radius = sprite.particleSystem.GetRadius()
 
     if (count > 0) {
-      let w = gl.canvas.width
-      let h = gl.canvas.height
+      const w = gl.canvas.width
+      const h = gl.canvas.height
 
       // start with ball shader
       sprite.ball_shader.bind()
 
       /* Position Buffer */
       // get pointer
-      let pos_offset = sprite.particleSystem.GetPositionBuffer()
+      const pos_offset = sprite.particleSystem.GetPositionBuffer()
       // read memory into JS Array
-      let raw_pos = new Float32Array(Box2D.HEAPU8.buffer, pos_offset.e, count * 2)
+      const raw_pos = new Float32Array(Box2D.HEAPU8.buffer, pos_offset.e, count * 2)
       // initalize new Array for corrected values
       let position = new Float32Array(count * 2)
       // transform physics engine coords to renderer coords
@@ -102,7 +102,7 @@ export default class LiquidfunRenderer extends ObjectRenderer {
       // upload data to gpu
       gl.bindBuffer(gl.ARRAY_BUFFER, sprite.pos_buffer)
       gl.bufferData(gl.ARRAY_BUFFER, position, gl.DYNAMIC_DRAW)
-      let positionHandle = sprite.ball_shader.attributes.position.location
+      const positionHandle = sprite.ball_shader.attributes.position.location
       gl.enableVertexAttribArray(positionHandle)
       gl.vertexAttribPointer(positionHandle, 2, gl.FLOAT, false, 0, 0)
 
@@ -117,7 +117,7 @@ export default class LiquidfunRenderer extends ObjectRenderer {
       gl.bufferData(gl.ARRAY_BUFFER, this.quad, gl.DYNAMIC_DRAW)
 
       sprite.blur_shader.bind()
-      let blurPositionHandle = sprite.blur_shader.attributes.position.location
+      const blurPositionHandle = sprite.blur_shader.attributes.position.location
       gl.enableVertexAttribArray(blurPositionHandle)
       gl.vertexAttribPointer(positionHandle, 2, gl.FLOAT, false, 0, 0)
       sprite.blur_shader.uniforms.base = 0
@@ -133,7 +133,7 @@ export default class LiquidfunRenderer extends ObjectRenderer {
 
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
       sprite.threshold_shader.bind()
-      let thresholdPositionHandle = sprite.threshold_shader.attributes.position.location
+      const thresholdPositionHandle = sprite.threshold_shader.attributes.position.location
       gl.vertexAttribPointer(thresholdPositionHandle, 2, gl.FLOAT, false, 0, 0)
       sprite.threshold_shader.uniforms.base = 0
       sprite.threshold_shader.uniforms.scale = this.texScale()

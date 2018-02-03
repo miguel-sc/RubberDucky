@@ -7,7 +7,7 @@ export default class LiquidfunSprite extends Container {
     super()
     this.particleSystem = particleSystem
 
-    let ball_vert = `
+    const ball_vert = `
     attribute vec2 position;
     attribute vec4 color;
     varying vec4 vColor;
@@ -19,7 +19,7 @@ export default class LiquidfunSprite extends Container {
         gl_PointSize = size;
     }`
 
-    let ball_frag = `
+    const ball_frag = `
     precision mediump float;
     varying vec4 vColor;
 
@@ -32,14 +32,14 @@ export default class LiquidfunSprite extends Container {
         }
     }`
 
-    let identity_vert = `
+    const identity_vert = `
     attribute vec2 position;
 
     void main() {
         gl_Position = vec4(position, 0.0, 1.0);
     }`
 
-    let blur_frag = `
+    const blur_frag = `
     precision mediump float;
 
     uniform sampler2D base;
@@ -71,7 +71,7 @@ export default class LiquidfunSprite extends Container {
             texture2D(base, p + sdir * vec2( 9.0,  9.0)) * 0.02433;
     }`
 
-    let threshold_frag = `
+    const threshold_frag = `
     precision mediump float;
 
     uniform sampler2D base;
