@@ -1,5 +1,6 @@
-import { Container, glCore } from 'pixi.js'
+import { Container, glCore, WebGLRenderer } from 'pixi.js'
 import App from './App'
+import LiquidfunRenderer from './LiquidfunRenderer'
 
 export default class LiquidfunSprite extends Container {
   constructor(particleSystem) {
@@ -100,3 +101,5 @@ export default class LiquidfunSprite extends Container {
     renderer.plugins.liquidfun.render(this)
   }
 }
+
+WebGLRenderer.registerPlugin(LiquidfunRenderer.pluginName, LiquidfunRenderer)

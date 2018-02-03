@@ -27,7 +27,6 @@
         ]
     },
     "globals": {
-      "Box2D": false,
-      "Module": false
+      "Box2D": false
     }
 }

@@ -1,4 +1,4 @@
-import { ObjectRenderer, WebGLRenderer } from 'pixi.js'
+import { ObjectRenderer } from 'pixi.js'
 
 function highest2(x) {
   return Math.pow(2, Math.ceil(Math.log(x) / Math.LN2))
@@ -89,12 +89,12 @@ export default class LiquidfunRenderer extends ObjectRenderer {
       // get pointer
       let pos_offset = sprite.particleSystem.GetPositionBuffer()
       // read memory into JS Array
-      let raw_pos = new Float32Array(Module.HEAPU8.buffer, pos_offset.e, count * 2)
+      let raw_pos = new Float32Array(Box2D.HEAPU8.buffer, pos_offset.e, count * 2)
 
       // initalize new Array for corrected values
       let position = new Float32Array(count * 2)
       // transform physics engine coords to renderer coords
-      let PTM = 20
+      let PTM = 1
       for (let i = 0; i < count; i++) {
         position[i * 2]   = (raw_pos[i * 2]   - fx) * 2 * PTM / w
         position[i * 2 + 1] = -(raw_pos[i * 2 + 1] - fy) * 2 * PTM / h
@@ -159,4 +159,3 @@ export default class LiquidfunRenderer extends ObjectRenderer {
 }
 
 LiquidfunRenderer.pluginName = 'liquidfun'
-WebGLRenderer.registerPlugin(LiquidfunRenderer.pluginName, LiquidfunRenderer)
