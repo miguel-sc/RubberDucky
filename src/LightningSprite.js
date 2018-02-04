@@ -9,12 +9,8 @@ export default class LightningSprite extends Graphics {
     const end = [0, App.renderer.height / 2]
     this.boundsPadding = 20
     this.clear()
-    this.lightning = this.breakSegment([start,end], 4, 60, 0.8)
-    this.drawLightning(this.lightning, 8)
-    this.lightning = this.breakSegment([start,end], 4, 60, 0.8)
-    this.drawLightning(this.lightning, 6)
-    this.lightning = this.breakSegment([start,end], 4, 60, 0.8)
-    this.drawLightning(this.lightning, 4)
+    this.lightning = this.breakSegment([start,end], 6, 200, 1.0)
+    this.drawLightning(this.lightning, 12)
     App.stage.addChild(this)
     this.blendMode = BLEND_MODES.ADD
     this.filters = [new DropShadowFilter(0, 0, 10, 0xffffff, 1)]
@@ -33,13 +29,13 @@ export default class LightningSprite extends Graphics {
     this.drawCircle(segments[segments.length - 1][1][0],segments[segments.length - 1][1][1], lineWidth / 2)
     this.endFill()
     for (let j = 0; j < children.length; j++) {
-      this.drawLightning(children[j], lineWidth * 0.7)
+      this.drawLightning(children[j], Math.max(lineWidth / 2, 3))
     }
   }
 
   breakSegment(segment, n, maxOffset, forkProbability) {
-    const lengthscale = 0.7
-    const maxAngle = 10 / 180 * Math.PI
+    const lengthscale = 0.8
+    const maxAngle = 15 / 180 * Math.PI
     if (n > 0) {
       let midpoint = [(segment[0][0] + segment[1][0]) / 2, (segment[0][1] + segment[1][1]) / 2]
       const normal = [segment[0][1] - segment[1][1], segment[1][0] - segment[0][0]]
