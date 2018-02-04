@@ -1,6 +1,6 @@
 import { Application, Texture, Sprite } from 'pixi.js'
 import LiquidfunSprite from './LiquidfunSprite'
-import LightningSprite from './LightningSprite'
+import LightningController from './LightningController'
 
 class App extends Application {
   constructor(options) {
@@ -24,7 +24,7 @@ class App extends Application {
       this.update()
     })
 
-    this.view.addEventListener('click', () => this.spawnLightning())
+    this.stage.addChild(new LightningController(this.view))
 
     /*this.ticker.add(() => {
       for (let i=0,s=this.sprites[i];i<this.sprites.length;s=this.sprites[++i]) {
@@ -33,17 +33,6 @@ class App extends Application {
         s.rotation = s.body.GetAngle()
       }
     })*/
-  }
-
-  spawnLightning() {
-    const x = (Math.random() - 0.5) * (this.renderer.width - 500)
-    const deltaX = (Math.random() - 0.5) * 500
-
-    const start = [x, - this.renderer.height / 2]
-    const end = [x + deltaX, this.renderer.height / 2]
-
-    const lightning = new LightningSprite(start, end)
-    this.stage.addChild(lightning)
   }
 
   update() {
