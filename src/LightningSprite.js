@@ -1,12 +1,27 @@
-import { Container, WebGLRenderer } from 'pixi.js'
-import LightningRenderer from './LightningRenderer'
+import { Graphics, BLEND_MODES } from 'pixi.js'
+import { DropShadowFilter } from '@pixi/filter-drop-shadow'
+import App from './App'
 
-export default class LightningSprite extends Container {
+export default class LightningSprite extends Graphics {
   constructor() {
     super()
-    const start = [0,0]
-    const end = [0,100]
-    this.segments = this.breakSegment([start,end], 4, 20)
+    const start = [0, -App.renderer.height / 2]
+    const end = [0, App.renderer.height / 2]
+    this.segments = this.breakSegment([start,end], 5, 100)
+    this.drawLightning()
+    App.stage.addChild(this)
+    this.blendMode = BLEND_MODES.ADD
+    this.filters = [new DropShadowFilter(0, 0, 10, 0xffffff, 1)]
+  }
+
+  drawLightning() {
+    this.clear()
+    this.lineStyle(8, 0xffffff)
+    this.boundsPadding = 20
+    this.moveTo(this.segments[0][0][0], this.segments[0][0][1])
+    for (let i = 0; i < this.segments.length; i++) {
+      this.lineTo(this.segments[i][1][0], this.segments[i][1][1])
+    }
   }
 
   breakSegment(segment, n, maxOffset) {
@@ -24,11 +39,4 @@ export default class LightningSprite extends Container {
       return [segment]
     }
   }
-
-  _renderWebGL(renderer) {
-    renderer.setObjectRenderer(renderer.plugins.lightning)
-    renderer.plugins.lightning.render(this)
-  }
 }
-
-WebGLRenderer.registerPlugin(LightningRenderer.pluginName, LightningRenderer)

@@ -38,6 +38,7 @@
     "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
+    "@pixi/filter-drop-shadow": "^2.5.0",
     "pixi.js": "^4.7.0"
   }
 }
