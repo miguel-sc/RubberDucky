@@ -1,6 +1,7 @@
 import { Application, Texture, Sprite } from 'pixi.js'
 import LiquidfunSprite from './LiquidfunSprite'
 import LightningController from './LightningController'
+import RubberDucky from './RubberDucky'
 
 class App extends Application {
   constructor(options) {
@@ -19,24 +20,13 @@ class App extends Application {
 
     this.createBoundingBox()
 
-    this.ticker.add(() => {
-      this.spawnRain()
-      this.update()
-    })
-
+    this.stage.addChild(new RubberDucky(0,this.renderer.height / 2 - 34))
     this.stage.addChild(new LightningController(this.view))
 
-    /*this.ticker.add(() => {
-      for (let i=0,s=this.sprites[i];i<this.sprites.length;s=this.sprites[++i]) {
-        let pos = s.body.GetPosition()
-        s.position.set(pos.get_x(), pos.get_y())
-        s.rotation = s.body.GetAngle()
-      }
-    })*/
-  }
-
-  update() {
-    this.world.Step(1/60, 8, 3, 3)
+    this.ticker.add(() => {
+      this.spawnRain()
+      this.world.Step(1/60, 8, 3, 3)
+    })
   }
 
   createBoundingBox() {
