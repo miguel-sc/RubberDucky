@@ -28,6 +28,10 @@ export default class LightningSprite extends Graphics {
     for (let i = 0; i < segments.length; i++) {
       this.lineTo(segments[i][1][0], segments[i][1][1])
     }
+    this.lineStyle(0, 0xffffff)
+    this.beginFill(0xffffff)
+    this.drawCircle(segments[segments.length - 1][1][0],segments[segments.length - 1][1][1], lineWidth / 2)
+    this.endFill()
     for (let j = 0; j < children.length; j++) {
       this.drawLightning(children[j], lineWidth * 0.7)
     }
