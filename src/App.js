@@ -19,8 +19,8 @@ class App extends Application {
     //console.log(this.particleSystemSprite.particleSystem.GetParticleCount())
 
     this.createBoundingBox()
-
-    this.stage.addChild(new RubberDucky(0,this.renderer.height / 2 - 34))
+    this.rubberDucky = new RubberDucky(0,this.renderer.height / 2 - 34)
+    this.stage.addChild(this.rubberDucky)
     this.stage.addChild(new LightningController(this.view))
 
     this.ticker.add(() => {
