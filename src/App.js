@@ -52,6 +52,7 @@ class App extends Application {
     const x = (Math.random() - 0.5) * this.renderer.width
     const pd = new Box2D.b2ParticleDef()
     pd.set_position(new Box2D.b2Vec2(x, -this.renderer.height / 2))
+    pd.set_velocity(new Box2D.b2Vec2(0, 200))
     this.particleSystemSprite.particleSystem.CreateParticle(pd)
   }
 

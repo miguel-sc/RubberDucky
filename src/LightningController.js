@@ -20,7 +20,7 @@ export default class LightningController extends Container {
     const x = (Math.random() - 0.5) * (window.innerWidth - 500)
     const deltaX = (Math.random() - 0.5) * 500
 
-    const start = [x, - window.innerWidth / 2]
+    const start = [x, - window.innerHeight / 2]
     const end = [x + deltaX, window.innerHeight / 2]
 
     const lightning = new LightningSprite(start, end)
