@@ -22,7 +22,6 @@ a {
   width: 200px;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  transition: all .7s;
 }
 
 .site-title {
@@ -55,6 +54,7 @@ a {
   margin: 2px;
   border-radius: 50%;
   border: 2px solid #FFFFFF;
+  transition: all .7s;
 }
 
 .icon:hover {
