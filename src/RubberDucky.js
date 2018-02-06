@@ -29,13 +29,13 @@ export default class RubberDucky extends Graphics {
 
     const frontBody = new Box2D.b2CircleShape()
     frontBody.set_m_p(new Box2D.b2Vec2(0.03, 0.065))
-    frontBody.set_m_radius(0.1)
-    duck.CreateFixture(frontBody, 0.4)
+    frontBody.set_m_radius(0.095)
+    duck.CreateFixture(frontBody, 0.5)
 
     const backBody = new Box2D.b2CircleShape()
     backBody.set_m_p(new Box2D.b2Vec2(-0.07, 0.065))
-    backBody.set_m_radius(0.1)
-    duck.CreateFixture(backBody, 0.4)
+    backBody.set_m_radius(0.095)
+    duck.CreateFixture(backBody, 0.5)
 
     this.body = duck
   }

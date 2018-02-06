@@ -20,7 +20,7 @@ export const particleIterations = 3
 
 // LiquidfunRenderer
 export const blurRadius = 3.2
-export const blurThreshold = 0.7
+export const blurThreshold = 0.85
 
 // Strength of clicks on the screen
 export const clickImpulse = 15
