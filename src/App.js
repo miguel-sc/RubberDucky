@@ -4,7 +4,7 @@ import LiquidfunSprite from './LiquidfunSprite'
 import RubberDucky from './RubberDucky'
 import { gravity, backgroundColor, particleRadius, maxParticleCount, PTM,
   timeStep, positionIterations, velocityIterations,
-  particleIterations, clickImpulse } from './Constants'
+  particleIterations, clickImpulse, widthBreakpoint } from './Constants'
 
 class App extends Application {
   constructor(options) {
@@ -16,7 +16,11 @@ class App extends Application {
 
   init() {
     this.createParticleSystem()
-    this.particleGroup = this.spawnParticles(0.76, 0, 0)
+    if (window.innerWidth > widthBreakpoint) {
+      this.particleGroup = this.spawnParticles(1.15, 0, 0)
+    } else {
+      this.particleGroup = this.spawnParticles(0.76, 0, 0)
+    }
     //console.log(this.particleSystemSprite.particleSystem.GetParticleCount())
 
     this.createBoundingBox()
@@ -42,8 +46,9 @@ class App extends Application {
 
   applyLinearImpulse(x, y) {
     const length = Math.sqrt(x*x + y*y)
-    x *= clickImpulse / length
-    y *= clickImpulse / length
+    const count = this.particleGroup.GetParticleCount()
+    x *= clickImpulse / length * count
+    y *= clickImpulse / length * count
     this.particleGroup.ApplyLinearImpulse(new Box2D.b2Vec2(x, y))
   }
 

@@ -23,4 +23,7 @@ export const blurRadius = 3.2
 export const blurThreshold = 0.85
 
 // Strength of clicks on the screen
-export const clickImpulse = 15
+export const clickImpulse = 0.015
+
+// Breakpoint for Mobile / Desktop
+export const widthBreakpoint = 768
