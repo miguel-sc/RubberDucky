@@ -2,12 +2,12 @@ import { Application, Texture, Sprite } from 'pixi.js'
 import LiquidfunSprite from './LiquidfunSprite'
 import LightningController from './LightningController'
 import RubberDucky from './RubberDucky'
+import { gravity, backgroundColor, particleRadius, maxParticleCount } from './Constants'
 
 class App extends Application {
   constructor(options) {
     super(options)
     this.renderer.render(this.stage)
-    const gravity = new Box2D.b2Vec2(0, 400)
     this.world = new Box2D.b2World(gravity)
     this.sprites = []
     this.stage.position.set(window.innerWidth / 2, window.innerHeight / 2)
@@ -24,7 +24,7 @@ class App extends Application {
     this.stage.addChild(new LightningController(this.view))
 
     this.ticker.add(() => {
-      this.spawnRain()
+      //this.spawnRain()
       this.world.Step(1/60, 8, 3, 3)
     })
   }
@@ -82,9 +82,9 @@ class App extends Application {
 
   createParticleSystem() {
     const psd = new Box2D.b2ParticleSystemDef()
-    psd.set_radius(2.0)
+    psd.set_radius(particleRadius)
     const particleSystem = this.world.CreateParticleSystem(psd)
-    particleSystem.SetMaxParticleCount(4000)
+    particleSystem.SetMaxParticleCount(maxParticleCount)
     this.particleSystemSprite = new LiquidfunSprite(particleSystem)
     this.stage.addChild(this.particleSystemSprite)
   }
@@ -107,5 +107,5 @@ export default new App({
   width: window.innerWidth,
   height: window.innerHeight,
   antialias: false,
-  backgroundColor : 0x04052E
+  backgroundColor : backgroundColor
 })
