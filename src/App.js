@@ -1,34 +1,50 @@
-import { Application, Texture, Sprite } from 'pixi.js'
+import { Application } from 'pixi.js'
 import LiquidfunSprite from './LiquidfunSprite'
-import LightningController from './LightningController'
+//import LightningController from './LightningController'
 import RubberDucky from './RubberDucky'
 import { gravity, backgroundColor, particleRadius, maxParticleCount, PTM,
   timeStep, positionIterations, velocityIterations,
-  particleIterations } from './Constants'
+  particleIterations, clickImpulse } from './Constants'
 
 class App extends Application {
   constructor(options) {
     super(options)
     this.renderer.render(this.stage)
     this.world = new Box2D.b2World(gravity)
-    this.sprites = []
     this.stage.position.set(window.innerWidth / 2, window.innerHeight / 2)
   }
 
   init() {
     this.createParticleSystem()
-    this.spawnParticles(0.76, 0, 0)
+    this.particleGroup = this.spawnParticles(0.76, 0, 0)
     //console.log(this.particleSystemSprite.particleSystem.GetParticleCount())
 
     this.createBoundingBox()
     this.rubberDucky = new RubberDucky(0,(this.renderer.height / 2 - 0.17 * PTM))
     this.stage.addChild(this.rubberDucky)
-    this.stage.addChild(new LightningController(this.view))
+    //this.stage.addChild(new LightningController(this.view))
 
     this.ticker.add(() => {
-      //this.spawnRain()
       this.world.Step(timeStep, velocityIterations, positionIterations, particleIterations)
     })
+
+    this.renderer.view.addEventListener('click', (event) => {
+      const x = event.clientX - window.innerWidth / 2
+      const y = event.clientY - window.innerHeight / 2
+      this.applyLinearImpulse(x, y)
+    })
+    this.renderer.view.addEventListener('touchstart', (event) => {
+      const x = event.touches[0].clientX - window.innerWidth / 2
+      const y = event.touches[0].clientY - window.innerHeight / 2
+      this.applyLinearImpulse(x, y)
+    })
+  }
+
+  applyLinearImpulse(x, y) {
+    const length = Math.sqrt(x*x + y*y)
+    x *= clickImpulse / length
+    y *= clickImpulse / length
+    this.particleGroup.ApplyLinearImpulse(new Box2D.b2Vec2(x, y))
   }
 
   createBoundingBox() {
@@ -56,30 +72,6 @@ class App extends Application {
     pd.set_position(new Box2D.b2Vec2(x / PTM, -this.renderer.height / 2 / PTM))
     pd.set_velocity(new Box2D.b2Vec2(0, 1))
     this.particleSystemSprite.particleSystem.CreateParticle(pd)
-  }
-
-  createBox(x, y, w, h, fixed) {
-    const bd = new Box2D.b2BodyDef()
-    if (!fixed) {
-      bd.set_type(2)
-    }
-    bd.set_position(new Box2D.b2Vec2(x, y))
-
-    const body = this.world.CreateBody(bd)
-
-    const shape = new Box2D.b2PolygonShape
-    shape.SetAsBox(w, h)
-    body.CreateFixture(shape, 0.5)
-
-    const sprite = Sprite.from(Texture.WHITE)
-    // dunno why this has to be times 2
-    sprite.width = w * 2
-    sprite.height = h * 2
-    sprite.anchor.set(0.5)
-    sprite.body = body
-    this.stage.addChild(sprite)
-    this.sprites.push(sprite)
-    return body
   }
 
   createParticleSystem() {

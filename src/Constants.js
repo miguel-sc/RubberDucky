@@ -1,3 +1,4 @@
+// Strength of gravity
 export const gravity = new Box2D.b2Vec2(0, 9.81)
 
 // Pixel to Meter ratio
@@ -20,3 +21,6 @@ export const particleIterations = 3
 // LiquidfunRenderer
 export const blurRadius = 3.2
 export const blurThreshold = 0.7
+
+// Strength of clicks on the screen
+export const clickImpulse = 15
