@@ -17,7 +17,7 @@ class App extends Application {
 
   init() {
     this.createParticleSystem()
-    this.spawnParticles(0.75, 0, 0)
+    this.spawnParticles(0.76, 0, 0)
     //console.log(this.particleSystemSprite.particleSystem.GetParticleCount())
 
     this.createBoundingBox()

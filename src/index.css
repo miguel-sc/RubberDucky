@@ -26,6 +26,7 @@ a {
 
 .site-title {
   font-size: 50px;
+  font-weight: normal;
   margin: 0;
   display: block;
   line-height: 1;
@@ -33,6 +34,7 @@ a {
 
 .site-description {
   font-size: 20px;
+  font-weight: normal;
   display: block;
   line-height: 1;
   margin: 5px 0 10px 0;
