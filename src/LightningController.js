@@ -1,6 +1,7 @@
 import { Container } from 'pixi.js'
 import LightningSprite from './LightningSprite'
 import App from './App'
+import { PTM } from './Constants'
 
 export default class LightningController extends Container {
   constructor(view) {
@@ -41,11 +42,11 @@ export default class LightningController extends Container {
     const raw_vel = new Float32Array(Box2D.HEAPU8.buffer, vel_offset.e, count * 2)
     for (let i = 0; i < count; i++) {
       const distance = Math.sqrt(
-        (raw_pos[2 * i] - x) * (raw_pos[2 * i] - x) +
-        (raw_pos[2 * i + 1] - window.innerHeight / 2) * (raw_pos[2 * i + 1] - window.innerHeight / 2)
+        (raw_pos[2 * i] - x / PTM) * (raw_pos[2 * i] - x / PTM) +
+        (raw_pos[2 * i + 1] - window.innerHeight / 2 / PTM) * (raw_pos[2 * i + 1] - window.innerHeight / 2 / PTM)
       )
-      raw_vel[2 * i] += (raw_pos[2 * i] - x) / distance * 7
-      raw_vel[2 * i + 1] += (raw_pos[2 * i + 1] - window.innerHeight / 2) / distance * 7
+      raw_vel[2 * i] += (raw_pos[2 * i] - x / PTM) / distance * 7
+      raw_vel[2 * i + 1] += (raw_pos[2 * i + 1] - window.innerHeight / 2 / PTM) / distance * 7
     }
   }
 }

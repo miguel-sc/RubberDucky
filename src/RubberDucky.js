@@ -1,6 +1,6 @@
 import { Graphics } from 'pixi.js'
 import App from './App'
-import { PTM } from './Constants'
+import { PTM, spriteColor } from './Constants'
 
 export default class RubberDucky extends Graphics {
   constructor(x, y) {
@@ -41,7 +41,7 @@ export default class RubberDucky extends Graphics {
   }
 
   draw() {
-    this.beginFill(0xffffff)
+    this.beginFill(spriteColor)
     // duckhead
     this.drawCircle(0.065 * PTM, -0.065 * PTM, 0.09 * PTM)
     // duckbody
@@ -50,14 +50,14 @@ export default class RubberDucky extends Graphics {
     this.drawEllipse(-0.165 * PTM, 0.0225 * PTM, 0.035 * PTM, 0.08 * PTM)
 
     const duckupperlip = new Graphics()
-    duckupperlip.beginFill(0xffffff)
+    duckupperlip.beginFill(spriteColor)
     duckupperlip.drawEllipse(0, 0, 0.035 * PTM, 0.02 * PTM)
     duckupperlip.rotation = - Math.PI / 9
     duckupperlip.position.set(0.165 * PTM, -0.08 * PTM)
     this.addChild(duckupperlip)
 
     const ducklowerlip = new Graphics()
-    ducklowerlip.beginFill(0xffffff)
+    ducklowerlip.beginFill(spriteColor)
     ducklowerlip.drawEllipse(0, 0, 0.035 * PTM, 0.02 * PTM)
     ducklowerlip.rotation = + Math.PI / 9
     ducklowerlip.position.set(0.165 * PTM, -0.05 * PTM)

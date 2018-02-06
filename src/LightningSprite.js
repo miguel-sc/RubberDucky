@@ -1,5 +1,6 @@
 import { Graphics, BLEND_MODES } from 'pixi.js'
 import { DropShadowFilter } from '@pixi/filter-drop-shadow'
+import { spriteColor } from './Constants'
 
 export default class LightningSprite extends Graphics {
   constructor(start, end) {
@@ -13,15 +14,15 @@ export default class LightningSprite extends Graphics {
   }
 
   drawLightning(branch, lineWidth) {
-    this.lineStyle(lineWidth, 0xffffff)
+    this.lineStyle(lineWidth, spriteColor)
     let children = branch.children
     let segments = branch.segments
     this.moveTo(segments[0][0][0], segments[0][0][1])
     for (let i = 0; i < segments.length; i++) {
       this.lineTo(segments[i][1][0], segments[i][1][1])
     }
-    this.lineStyle(0, 0xffffff)
-    this.beginFill(0xffffff)
+    this.lineStyle(0, spriteColor)
+    this.beginFill(spriteColor)
     this.drawCircle(segments[segments.length - 1][1][0],segments[segments.length - 1][1][1], lineWidth / 2)
     this.endFill()
     for (let j = 0; j < children.length; j++) {

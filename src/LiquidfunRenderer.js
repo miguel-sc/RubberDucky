@@ -1,5 +1,5 @@
-import { ObjectRenderer } from 'pixi.js'
-import { PTM } from './Constants'
+import { ObjectRenderer, utils } from 'pixi.js'
+import { PTM, spriteColor, blurRadius, blurThreshold } from './Constants'
 
 function highest2(v) {
   // compute the next highest power of 2 of 32-bit v
@@ -21,8 +21,10 @@ export default class LiquidfunRenderer extends ObjectRenderer {
       -1, -1, 1, -1, -1, 1, 1, 1
     ])
     this.textures = null
-    this.blurRadius = 3.2
-    this.threshold = 0.7
+    this.blurRadius = blurRadius
+    this.threshold = blurThreshold
+    const rgb = utils.hex2rgb(spriteColor)
+    this.rgba = rgb.concat([1.0])
   }
 
   swap() {
@@ -139,7 +141,7 @@ export default class LiquidfunRenderer extends ObjectRenderer {
       sprite.threshold_shader.uniforms.base = 0
       sprite.threshold_shader.uniforms.scale = this.texScale()
       sprite.threshold_shader.uniforms.threshold = this.threshold
-      sprite.threshold_shader.uniforms.color = new Float32Array([1.0, 1.0, 1.0, 1.0])
+      sprite.threshold_shader.uniforms.color = new Float32Array(this.rgba)
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
     }
   }
