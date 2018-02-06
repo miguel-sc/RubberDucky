@@ -6,28 +6,27 @@ export default class LightningController extends Container {
   constructor(view) {
     super()
     this.charged = true
-    view.addEventListener('click', () => this.handleClick())
-    view.addEventListener('touchend', () => this.handleClick())
+    view.addEventListener('click', (event) => this.handleClick(event))
+    view.addEventListener('touchend', (event) => this.handleClick(event))
   }
 
-  handleClick() {
+  handleClick(event) {
     if (this.charged) {
-      this.spawnLightning()
+      this.spawnLightning(event.clientX - window.innerWidth / 2)
       this.charged = false
       setTimeout(() => {this.charged = true}, 400)
     }
   }
 
-  spawnLightning() {
+  spawnLightning(x) {
     let start, end
-    const x = (Math.random() - 0.5) * (window.innerWidth - 500)
-    const deltaX = (Math.random() - 0.5) * 500
+    const deltaX = Math.random() * 0.5 + 0.5
     if (window.innerWidth < 500) {
       start = [0, - window.innerHeight / 2]
       end = [0, window.innerHeight / 2]
     } else {
-      start = [x, - window.innerHeight / 2]
-      end = [x + deltaX, window.innerHeight / 2]
+      start = [x * deltaX, - window.innerHeight / 2]
+      end = [x, window.innerHeight / 2]
     }
     const lightning = new LightningSprite(start, end)
     this.addChild(lightning)
