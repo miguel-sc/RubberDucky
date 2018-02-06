@@ -2,7 +2,7 @@ import { Application, Texture, Sprite } from 'pixi.js'
 import LiquidfunSprite from './LiquidfunSprite'
 import LightningController from './LightningController'
 import RubberDucky from './RubberDucky'
-import { gravity, backgroundColor, particleRadius, maxParticleCount } from './Constants'
+import { gravity, backgroundColor, particleRadius, maxParticleCount, PTM } from './Constants'
 
 class App extends Application {
   constructor(options) {
@@ -15,11 +15,11 @@ class App extends Application {
 
   init() {
     this.createParticleSystem()
-    this.spawnParticles(100, 0, 0)
+    this.spawnParticles(0.75, 0, 0)
     //console.log(this.particleSystemSprite.particleSystem.GetParticleCount())
 
     this.createBoundingBox()
-    this.rubberDucky = new RubberDucky(0,this.renderer.height / 2 - 34)
+    this.rubberDucky = new RubberDucky(0,(this.renderer.height / 2 - 34))
     this.stage.addChild(this.rubberDucky)
     this.stage.addChild(new LightningController(this.view))
 
@@ -34,8 +34,8 @@ class App extends Application {
     bd.set_position(new Box2D.b2Vec2(0, 0))
     const boundingbox = this.world.CreateBody(bd)
 
-    const x = this.renderer.width / 2
-    const y = this.renderer.height / 2
+    const x = this.renderer.width / 2 / PTM
+    const y = this.renderer.height / 2 / PTM
     const shape = new Box2D.b2EdgeShape()
 
     shape.Set(new Box2D.b2Vec2(-x, -y), new Box2D.b2Vec2(-x, y))
@@ -51,8 +51,8 @@ class App extends Application {
   spawnRain() {
     const x = (Math.random() - 0.5) * this.renderer.width
     const pd = new Box2D.b2ParticleDef()
-    pd.set_position(new Box2D.b2Vec2(x, -this.renderer.height / 2))
-    pd.set_velocity(new Box2D.b2Vec2(0, 200))
+    pd.set_position(new Box2D.b2Vec2(x / PTM, -this.renderer.height / 2 / PTM))
+    pd.set_velocity(new Box2D.b2Vec2(0, 1))
     this.particleSystemSprite.particleSystem.CreateParticle(pd)
   }
 

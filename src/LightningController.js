@@ -40,12 +40,12 @@ export default class LightningController extends Container {
     const raw_pos = new Float32Array(Box2D.HEAPU8.buffer, pos_offset.e, count * 2)
     const raw_vel = new Float32Array(Box2D.HEAPU8.buffer, vel_offset.e, count * 2)
     for (let i = 0; i < count; i++) {
-      const distance2 = Math.sqrt(
+      const distance = Math.sqrt(
         (raw_pos[2 * i] - x) * (raw_pos[2 * i] - x) +
         (raw_pos[2 * i + 1] - window.innerHeight / 2) * (raw_pos[2 * i + 1] - window.innerHeight / 2)
       )
-      raw_vel[2 * i] += (raw_pos[2 * i] - x) / distance2 * 1000
-      raw_vel[2 * i + 1] += (raw_pos[2 * i + 1] - window.innerHeight / 2) / distance2 * 1000
+      raw_vel[2 * i] += (raw_pos[2 * i] - x) / distance * 7
+      raw_vel[2 * i + 1] += (raw_pos[2 * i + 1] - window.innerHeight / 2) / distance * 7
     }
   }
 }

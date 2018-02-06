@@ -1,16 +1,17 @@
 import { Graphics } from 'pixi.js'
 import App from './App'
+import { PTM } from './Constants'
 
 export default class RubberDucky extends Graphics {
   constructor(x, y) {
     super()
     this.position.set(x, y)
-    this.createBody(x, y)
+    this.createBody(x / PTM, y / PTM)
     this.draw()
 
     App.ticker.add(() => {
       let pos = this.body.GetPosition()
-      this.position.set(pos.get_x(), pos.get_y())
+      this.position.set(pos.get_x() * PTM, pos.get_y() * PTM)
       this.rotation = this.body.GetAngle()
     })
   }
@@ -22,19 +23,19 @@ export default class RubberDucky extends Graphics {
     const duck = App.world.CreateBody(bd)
 
     const head = new Box2D.b2CircleShape()
-    head.set_m_p(new Box2D.b2Vec2(13, -13))
-    head.set_m_radius(18)
+    head.set_m_p(new Box2D.b2Vec2(0.065, -0.065))
+    head.set_m_radius(0.09)
     duck.CreateFixture(head, 0.01)
 
     const frontBody = new Box2D.b2CircleShape()
-    frontBody.set_m_p(new Box2D.b2Vec2(6, 13))
-    frontBody.set_m_radius(21)
-    duck.CreateFixture(frontBody, 0.2)
+    frontBody.set_m_p(new Box2D.b2Vec2(0.03, 0.065))
+    frontBody.set_m_radius(0.1)
+    duck.CreateFixture(frontBody, 0.4)
 
     const backBody = new Box2D.b2CircleShape()
-    backBody.set_m_p(new Box2D.b2Vec2(-14, 13))
-    backBody.set_m_radius(21)
-    duck.CreateFixture(backBody, 0.2)
+    backBody.set_m_p(new Box2D.b2Vec2(-0.07, 0.065))
+    backBody.set_m_radius(0.1)
+    duck.CreateFixture(backBody, 0.4)
 
     this.body = duck
   }
@@ -42,24 +43,24 @@ export default class RubberDucky extends Graphics {
   draw() {
     this.beginFill(0xffffff)
     // duckhead
-    this.drawCircle(13, -13, 18)
+    this.drawCircle(0.065 * PTM, -0.065 * PTM, 0.09 * PTM)
     // duckbody
-    this.drawEllipse(-4, 13, 34.5, 23)
+    this.drawEllipse(-0.02 * PTM, 0.065 * PTM, 0.1725 * PTM, 0.115 * PTM)
     // ducktail
-    this.drawEllipse(-33, 4.5, 7, 16)
+    this.drawEllipse(-0.165 * PTM, 0.0225 * PTM, 0.035 * PTM, 0.08 * PTM)
 
     const duckupperlip = new Graphics()
     duckupperlip.beginFill(0xffffff)
-    duckupperlip.drawEllipse(0, 0, 7, 4)
+    duckupperlip.drawEllipse(0, 0, 0.035 * PTM, 0.02 * PTM)
     duckupperlip.rotation = - Math.PI / 9
-    duckupperlip.position.set(33, -16)
+    duckupperlip.position.set(0.165 * PTM, -0.08 * PTM)
     this.addChild(duckupperlip)
 
     const ducklowerlip = new Graphics()
     ducklowerlip.beginFill(0xffffff)
-    ducklowerlip.drawEllipse(0, 0, 7, 4)
+    ducklowerlip.drawEllipse(0, 0, 0.035 * PTM, 0.02 * PTM)
     ducklowerlip.rotation = + Math.PI / 9
-    ducklowerlip.position.set(33, -10)
+    ducklowerlip.position.set(0.165 * PTM, -0.05 * PTM)
     this.addChild(ducklowerlip)
   }
 }
