@@ -1,5 +1,5 @@
-import { Graphics, BLEND_MODES } from 'pixi.js'
-import { DropShadowFilter } from '@pixi/filter-drop-shadow'
+import { Graphics } from 'pixi.js'
+//import { DropShadowFilter } from '@pixi/filter-drop-shadow'
 import { spriteColor } from './Constants'
 
 export default class LightningSprite extends Graphics {
@@ -8,8 +8,8 @@ export default class LightningSprite extends Graphics {
     this.boundsPadding = 20
     this.lightning = this.breakSegment([start,end], 6, 200, 1.0)
     this.drawLightning(this.lightning, 12)
-    this.blendMode = BLEND_MODES.ADD
-    this.filters = [new DropShadowFilter(0, 0, 10, 0xffffff, 1)]
+    //this.blendMode = BLEND_MODES.ADD
+    //this.filters = [new DropShadowFilter(0, 0, 10, 0xffffff, 1)]
     setTimeout(() => {this.destroy()}, 400)
   }
 
