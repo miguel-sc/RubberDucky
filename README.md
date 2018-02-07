@@ -1,6 +1,6 @@
 # RubberDucky
 
-Fluid simulation with rubber ducky for my Homepage [miguelsantoscorrea.com](https://miguelsantoscorrea.com).
+Fluid simulation with rubber ducky for my [Homepage](https://miguelsantoscorrea.com).
 
 ## Credits
 
