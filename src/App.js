@@ -1,6 +1,5 @@
 import { Application } from 'pixi.js'
 import LiquidfunSprite from './LiquidfunSprite'
-//import LightningController from './LightningController'
 import RubberDucky from './RubberDucky'
 import { gravity, backgroundColor, particleRadius, maxParticleCount, PTM,
   timeStep, positionIterations, velocityIterations,
@@ -26,7 +25,6 @@ class App extends Application {
     this.createBoundingBox()
     this.rubberDucky = new RubberDucky(0,(this.renderer.height / 2 - 0.17 * PTM))
     this.stage.addChild(this.rubberDucky)
-    //this.stage.addChild(new LightningController(this.view))
 
     this.ticker.add(() => {
       this.world.Step(timeStep, velocityIterations, positionIterations, particleIterations)
@@ -69,14 +67,6 @@ class App extends Application {
     boundingbox.CreateFixture(shape, 0.0)
     shape.Set(new Box2D.b2Vec2(x, -y), new Box2D.b2Vec2(-x, -y))
     boundingbox.CreateFixture(shape, 0.0)
-  }
-
-  spawnRain() {
-    const x = (Math.random() - 0.5) * this.renderer.width
-    const pd = new Box2D.b2ParticleDef()
-    pd.set_position(new Box2D.b2Vec2(x / PTM, -this.renderer.height / 2 / PTM))
-    pd.set_velocity(new Box2D.b2Vec2(0, 1))
-    this.particleSystemSprite.particleSystem.CreateParticle(pd)
   }
 
   createParticleSystem() {
