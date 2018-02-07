@@ -27,3 +27,4 @@ export const clickImpulse = 0.015
 
 // Breakpoint for Mobile / Desktop
 export const widthBreakpoint = 768
+export const heightBreakpoint = 500

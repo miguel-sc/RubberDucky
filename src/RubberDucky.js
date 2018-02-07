@@ -8,12 +8,6 @@ export default class RubberDucky extends Graphics {
     this.position.set(x, y)
     this.createBody(x / PTM, y / PTM)
     this.draw()
-
-    App.ticker.add(() => {
-      let pos = this.body.GetPosition()
-      this.position.set(pos.get_x() * PTM, pos.get_y() * PTM)
-      this.rotation = this.body.GetAngle()
-    })
   }
 
   createBody(x, y) {

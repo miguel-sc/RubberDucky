@@ -3,43 +3,72 @@ import LiquidfunSprite from './LiquidfunSprite'
 import RubberDucky from './RubberDucky'
 import { gravity, backgroundColor, particleRadius, maxParticleCount, PTM,
   timeStep, positionIterations, velocityIterations,
-  particleIterations, clickImpulse, widthBreakpoint } from './Constants'
+  particleIterations, clickImpulse, widthBreakpoint,
+  heightBreakpoint } from './Constants'
 
 class App extends Application {
   constructor(options) {
     super(options)
     this.renderer.render(this.stage)
     this.world = new Box2D.b2World(gravity)
-    this.stage.position.set(window.innerWidth / 2, window.innerHeight / 2)
-  }
-
-  init() {
-    this.createParticleSystem()
-    if (window.innerWidth > widthBreakpoint) {
-      this.particleGroup = this.spawnParticles(1.15, 0, 0)
-    } else {
-      this.particleGroup = this.spawnParticles(0.76, 0, 0)
-    }
-    //console.log(this.particleSystemSprite.particleSystem.GetParticleCount())
-
-    this.createBoundingBox()
-    this.rubberDucky = new RubberDucky(0,(this.renderer.height / 2 - 0.17 * PTM))
-    this.stage.addChild(this.rubberDucky)
+    this.sprites = []
 
     this.ticker.add(() => {
       this.world.Step(timeStep, velocityIterations, positionIterations, particleIterations)
+
+      for (let i=0,s=this.sprites[i];i<this.sprites.length;s=this.sprites[++i]) {
+        let pos = s.body.GetPosition()
+        s.position.set(pos.get_x()*PTM, pos.get_y()*PTM)
+        s.rotation = s.body.GetAngle()
+      }
     })
+
+    window.addEventListener('resize', () => this.resizeHandler())
 
     this.renderer.view.addEventListener('click', (event) => {
       const x = event.clientX - window.innerWidth / 2
       const y = event.clientY - window.innerHeight / 2
       this.applyLinearImpulse(x, y)
     })
+
     this.renderer.view.addEventListener('touchstart', (event) => {
       const x = event.touches[0].clientX - window.innerWidth / 2
       const y = event.touches[0].clientY - window.innerHeight / 2
       this.applyLinearImpulse(x, y)
     })
+  }
+
+  init() {
+    this.stage.position.set(window.innerWidth / 2, window.innerHeight / 2)
+
+    this.createParticleSystem()
+    if ((window.innerWidth > widthBreakpoint) && (window.innerHeight > heightBreakpoint)){
+      this.particleGroup = this.spawnParticles(1.15, 0, 0)
+    } else {
+      this.particleGroup = this.spawnParticles(0.76, 0, 0)
+    }
+
+    this.boundingbox = this.createBoundingBox()
+    this.rubberDucky = new RubberDucky(0, (this.renderer.height / 2 - 0.17 * PTM))
+    this.sprites.push(this.rubberDucky)
+    this.stage.addChild(this.rubberDucky)
+  }
+
+  resizeHandler() {
+    this.destroyAll()
+    this.renderer.resize(window.innerWidth, window.innerHeight)
+    this.init()
+  }
+
+  destroyAll() {
+    for (let i=0,s=this.sprites[i];i<this.sprites.length;s=this.sprites[++i]) {
+      this.world.DestroyBody(s.body)
+      s.destroy()
+    }
+    this.world.DestroyBody(this.boundingbox)
+    this.world.DestroyParticleSystem(this.particleSystemSprite.particleSystem)
+    this.particleSystemSprite.destroy()
+    this.sprites = []
   }
 
   applyLinearImpulse(x, y) {
@@ -67,6 +96,7 @@ class App extends Application {
     boundingbox.CreateFixture(shape, 0.0)
     shape.Set(new Box2D.b2Vec2(x, -y), new Box2D.b2Vec2(-x, -y))
     boundingbox.CreateFixture(shape, 0.0)
+    return boundingbox
   }
 
   createParticleSystem() {

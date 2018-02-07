@@ -25,6 +25,8 @@ export default class LiquidfunRenderer extends ObjectRenderer {
     this.threshold = blurThreshold
     const rgb = utils.hex2rgb(spriteColor)
     this.rgba = rgb.concat([1.0])
+
+    window.addEventListener('resize', () => {this.textures = null}, false)
   }
 
   swap() {
