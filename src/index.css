@@ -56,7 +56,8 @@ a {
   margin: 2px;
   border-radius: 50%;
   border: 2px solid #FFFFFF;
-  transition: all .7s;
+  transition-property: color, background-color;
+  transition-duration: .7s;
 }
 
 .icon:hover {
