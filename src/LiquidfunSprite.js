@@ -1,11 +1,11 @@
-import { Container, glCore, WebGLRenderer } from 'pixi.js'
-import App from './App'
-import LiquidfunRenderer from './LiquidfunRenderer'
+import { Container, glCore, WebGLRenderer } from "pixi.js";
+import App from "./App";
+import LiquidfunRenderer from "./LiquidfunRenderer";
 
 export default class LiquidfunSprite extends Container {
   constructor(particleSystem) {
-    super()
-    this.particleSystem = particleSystem
+    super();
+    this.particleSystem = particleSystem;
 
     const ball_vert = `
     attribute vec2 position;
@@ -14,7 +14,7 @@ export default class LiquidfunSprite extends Container {
     void main() {
       gl_Position = vec4(position, 0.0, 1.0);
       gl_PointSize = size;
-    }`
+    }`;
 
     const ball_frag = `
     precision mediump float;
@@ -25,14 +25,14 @@ export default class LiquidfunSprite extends Container {
       } else {
         gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
       }
-    }`
+    }`;
 
     const identity_vert = `
     attribute vec2 position;
 
     void main() {
       gl_Position = vec4(position, 0.0, 1.0);
-    }`
+    }`;
 
     const blur_frag = `
     precision mediump float;
@@ -64,7 +64,7 @@ export default class LiquidfunSprite extends Container {
         texture2D(base, p + sdir * vec2( 7.0,  7.0)) * 0.03795 +
         texture2D(base, p + sdir * vec2( 8.0,  8.0)) * 0.03081 +
         texture2D(base, p + sdir * vec2( 9.0,  9.0)) * 0.02433;
-    }`
+    }`;
 
     const threshold_frag = `
     precision mediump float;
@@ -81,20 +81,32 @@ export default class LiquidfunSprite extends Container {
       } else {
         gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
       }
-    }`
+    }`;
 
-    this.ball_shader = new glCore.GLShader(App.renderer.gl, ball_vert, ball_frag)
-    this.blur_shader = new glCore.GLShader(App.renderer.gl, identity_vert, blur_frag)
-    this.threshold_shader = new glCore.GLShader(App.renderer.gl, identity_vert, threshold_frag)
-    this.pos_buffer = App.renderer.gl.createBuffer()
-    this.color_buffer = App.renderer.gl.createBuffer()
-    this.quadbuffer = App.renderer.gl.createBuffer()
+    this.ball_shader = new glCore.GLShader(
+      App.renderer.gl,
+      ball_vert,
+      ball_frag
+    );
+    this.blur_shader = new glCore.GLShader(
+      App.renderer.gl,
+      identity_vert,
+      blur_frag
+    );
+    this.threshold_shader = new glCore.GLShader(
+      App.renderer.gl,
+      identity_vert,
+      threshold_frag
+    );
+    this.pos_buffer = App.renderer.gl.createBuffer();
+    this.color_buffer = App.renderer.gl.createBuffer();
+    this.quadbuffer = App.renderer.gl.createBuffer();
   }
 
   _renderWebGL(renderer) {
-    renderer.setObjectRenderer(renderer.plugins.liquidfun)
-    renderer.plugins.liquidfun.render(this)
+    renderer.setObjectRenderer(renderer.plugins.liquidfun);
+    renderer.plugins.liquidfun.render(this);
   }
 }
 
-WebGLRenderer.registerPlugin(LiquidfunRenderer.pluginName, LiquidfunRenderer)
+WebGLRenderer.registerPlugin(LiquidfunRenderer.pluginName, LiquidfunRenderer);

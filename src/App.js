@@ -1,123 +1,154 @@
-import { Application } from 'pixi.js'
-import LiquidfunSprite from './LiquidfunSprite'
-import RubberDucky from './RubberDucky'
-import { gravity, backgroundColor, particleRadius, maxParticleCount, PTM,
-  timeStep, positionIterations, velocityIterations,
-  particleIterations, clickImpulse, widthBreakpoint,
-  heightBreakpoint } from './Constants'
+import { Application } from "pixi.js";
+import LiquidfunSprite from "./LiquidfunSprite";
+import RubberDucky from "./RubberDucky";
+import {
+  gravity,
+  backgroundColor,
+  particleRadius,
+  maxParticleCount,
+  PTM,
+  timeStep,
+  positionIterations,
+  velocityIterations,
+  particleIterations,
+  clickImpulse,
+  widthBreakpoint,
+  heightBreakpoint,
+} from "./Constants";
 
 class App extends Application {
   constructor(options) {
-    super(options)
-    this.renderer.render(this.stage)
-    this.world = new Box2D.b2World(gravity)
-    this.sprites = []
+    super(options);
+    this.renderer.render(this.stage);
+    this.world = new Box2D.b2World(gravity);
+    this.sprites = [];
 
     this.ticker.add(() => {
-      this.world.Step(timeStep, velocityIterations, positionIterations, particleIterations)
+      this.world.Step(
+        timeStep,
+        velocityIterations,
+        positionIterations,
+        particleIterations
+      );
 
-      for (let i=0,s=this.sprites[i];i<this.sprites.length;s=this.sprites[++i]) {
-        let pos = s.body.GetPosition()
-        s.position.set(pos.get_x()*PTM, pos.get_y()*PTM)
-        s.rotation = s.body.GetAngle()
+      for (
+        let i = 0, s = this.sprites[i];
+        i < this.sprites.length;
+        s = this.sprites[++i]
+      ) {
+        let pos = s.body.GetPosition();
+        s.position.set(pos.get_x() * PTM, pos.get_y() * PTM);
+        s.rotation = s.body.GetAngle();
       }
-    })
+    });
 
-    window.addEventListener('resize', () => this.resizeHandler())
+    window.addEventListener("resize", () => this.resizeHandler());
 
-    this.renderer.view.addEventListener('click', (event) => {
-      const x = event.clientX - window.innerWidth / 2
-      const y = event.clientY - window.innerHeight / 2
-      this.applyLinearImpulse(x, y)
-    })
+    this.renderer.view.addEventListener("click", (event) => {
+      const x = event.clientX - window.innerWidth / 2;
+      const y = event.clientY - window.innerHeight / 2;
+      this.applyLinearImpulse(x, y);
+    });
 
-    this.renderer.view.addEventListener('touchstart', (event) => {
-      const x = event.touches[0].clientX - window.innerWidth / 2
-      const y = event.touches[0].clientY - window.innerHeight / 2
-      this.applyLinearImpulse(x, y)
-    })
+    this.renderer.view.addEventListener("touchstart", (event) => {
+      const x = event.touches[0].clientX - window.innerWidth / 2;
+      const y = event.touches[0].clientY - window.innerHeight / 2;
+      this.applyLinearImpulse(x, y);
+    });
   }
 
   init() {
-    this.stage.position.set(window.innerWidth / 2, window.innerHeight / 2)
+    this.stage.position.set(window.innerWidth / 2, window.innerHeight / 2);
 
-    this.createParticleSystem()
-    if ((window.innerWidth > widthBreakpoint) && (window.innerHeight > heightBreakpoint)){
-      this.particleGroup = this.spawnParticles(1.15, 0, 0)
+    this.createParticleSystem();
+    if (
+      window.innerWidth > widthBreakpoint &&
+      window.innerHeight > heightBreakpoint
+    ) {
+      this.particleGroup = this.spawnParticles(1.15, 0, 0);
     } else {
-      this.particleGroup = this.spawnParticles(0.76, 0, 0)
+      this.particleGroup = this.spawnParticles(0.76, 0, 0);
     }
 
-    this.boundingbox = this.createBoundingBox()
-    this.rubberDucky = new RubberDucky(0, (this.renderer.height / 2 - 0.17 * PTM))
-    this.sprites.push(this.rubberDucky)
-    this.stage.addChild(this.rubberDucky)
+    this.boundingbox = this.createBoundingBox();
+    this.rubberDucky = new RubberDucky(
+      0,
+      this.renderer.height / 2 - 0.17 * PTM
+    );
+    this.sprites.push(this.rubberDucky);
+    this.stage.addChild(this.rubberDucky);
   }
 
   resizeHandler() {
-    this.destroyAll()
-    this.renderer.resize(window.innerWidth, window.innerHeight)
-    this.init()
+    this.destroyAll();
+    this.renderer.resize(window.innerWidth, window.innerHeight);
+    this.init();
   }
 
   destroyAll() {
-    for (let i=0,s=this.sprites[i];i<this.sprites.length;s=this.sprites[++i]) {
-      this.world.DestroyBody(s.body)
-      s.destroy()
+    for (
+      let i = 0, s = this.sprites[i];
+      i < this.sprites.length;
+      s = this.sprites[++i]
+    ) {
+      this.world.DestroyBody(s.body);
+      s.destroy();
     }
-    this.world.DestroyBody(this.boundingbox)
-    this.world.DestroyParticleSystem(this.particleSystemSprite.particleSystem)
-    this.particleSystemSprite.destroy()
-    this.sprites = []
+    this.world.DestroyBody(this.boundingbox);
+    this.world.DestroyParticleSystem(this.particleSystemSprite.particleSystem);
+    this.particleSystemSprite.destroy();
+    this.sprites = [];
   }
 
   applyLinearImpulse(x, y) {
-    const length = Math.sqrt(x*x + y*y)
-    const count = this.particleGroup.GetParticleCount()
-    x *= clickImpulse / length * count
-    y *= clickImpulse / length * count
-    this.particleGroup.ApplyLinearImpulse(new Box2D.b2Vec2(x, y))
+    const length = Math.sqrt(x * x + y * y);
+    const count = this.particleGroup.GetParticleCount();
+    x *= (clickImpulse / length) * count;
+    y *= (clickImpulse / length) * count;
+    this.particleGroup.ApplyLinearImpulse(new Box2D.b2Vec2(x, y));
   }
 
   createBoundingBox() {
-    const bd = new Box2D.b2BodyDef()
-    bd.set_position(new Box2D.b2Vec2(0, 0))
-    const boundingbox = this.world.CreateBody(bd)
+    const bd = new Box2D.b2BodyDef();
+    bd.set_position(new Box2D.b2Vec2(0, 0));
+    const boundingbox = this.world.CreateBody(bd);
 
-    const x = this.renderer.width / 2 / PTM
-    const y = this.renderer.height / 2 / PTM
-    const shape = new Box2D.b2EdgeShape()
+    const x = this.renderer.width / 2 / PTM;
+    const y = this.renderer.height / 2 / PTM;
+    const shape = new Box2D.b2EdgeShape();
 
-    shape.Set(new Box2D.b2Vec2(-x, -y), new Box2D.b2Vec2(-x, y))
-    boundingbox.CreateFixture(shape, 0.0)
-    shape.Set(new Box2D.b2Vec2(-x, y), new Box2D.b2Vec2(x, y))
-    boundingbox.CreateFixture(shape, 0.0)
-    shape.Set(new Box2D.b2Vec2(x, y), new Box2D.b2Vec2(x, -y))
-    boundingbox.CreateFixture(shape, 0.0)
-    shape.Set(new Box2D.b2Vec2(x, -y), new Box2D.b2Vec2(-x, -y))
-    boundingbox.CreateFixture(shape, 0.0)
-    return boundingbox
+    shape.Set(new Box2D.b2Vec2(-x, -y), new Box2D.b2Vec2(-x, y));
+    boundingbox.CreateFixture(shape, 0.0);
+    shape.Set(new Box2D.b2Vec2(-x, y), new Box2D.b2Vec2(x, y));
+    boundingbox.CreateFixture(shape, 0.0);
+    shape.Set(new Box2D.b2Vec2(x, y), new Box2D.b2Vec2(x, -y));
+    boundingbox.CreateFixture(shape, 0.0);
+    shape.Set(new Box2D.b2Vec2(x, -y), new Box2D.b2Vec2(-x, -y));
+    boundingbox.CreateFixture(shape, 0.0);
+    return boundingbox;
   }
 
   createParticleSystem() {
-    const psd = new Box2D.b2ParticleSystemDef()
-    psd.set_radius(particleRadius)
-    const particleSystem = this.world.CreateParticleSystem(psd)
-    particleSystem.SetMaxParticleCount(maxParticleCount)
-    this.particleSystemSprite = new LiquidfunSprite(particleSystem)
-    this.stage.addChild(this.particleSystemSprite)
+    const psd = new Box2D.b2ParticleSystemDef();
+    psd.set_radius(particleRadius);
+    const particleSystem = this.world.CreateParticleSystem(psd);
+    particleSystem.SetMaxParticleCount(maxParticleCount);
+    this.particleSystemSprite = new LiquidfunSprite(particleSystem);
+    this.stage.addChild(this.particleSystemSprite);
   }
 
   spawnParticles(radius, x, y) {
-    const pgd = new Box2D.b2ParticleGroupDef()
-    const shape = new Box2D.b2CircleShape()
+    const pgd = new Box2D.b2ParticleGroupDef();
+    const shape = new Box2D.b2CircleShape();
 
-    shape.set_m_radius(radius)
-    shape.set_m_p(new Box2D.b2Vec2(x, y))
-    pgd.set_shape(shape)
+    shape.set_m_radius(radius);
+    shape.set_m_p(new Box2D.b2Vec2(x, y));
+    pgd.set_shape(shape);
 
-    const group = this.particleSystemSprite.particleSystem.CreateParticleGroup(pgd)
-    return group
+    const group = this.particleSystemSprite.particleSystem.CreateParticleGroup(
+      pgd
+    );
+    return group;
   }
 }
 
@@ -126,5 +157,5 @@ export default new App({
   width: window.innerWidth,
   height: window.innerHeight,
   antialias: false,
-  backgroundColor : backgroundColor
-})
+  backgroundColor: backgroundColor,
+});
