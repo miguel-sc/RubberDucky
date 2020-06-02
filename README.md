@@ -29,7 +29,7 @@ $ npm start
 ```
 Build:
 ```
-$ npm run production
+$ npm run build
 ```
 
 ## Built With
