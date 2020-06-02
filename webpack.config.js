@@ -1,5 +1,5 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 var HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   template: __dirname + "/src/index.html",
@@ -27,10 +27,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: [{ loader: "css-loader", options: { minimize: true } }],
-        }),
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
         test: /\.ico$/,
@@ -45,5 +42,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [HtmlWebpackPluginConfig, new ExtractTextPlugin("index.css")],
+  plugins: [HtmlWebpackPluginConfig, new MiniCssExtractPlugin()],
 };
