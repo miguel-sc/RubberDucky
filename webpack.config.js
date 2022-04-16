@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 var HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   template: __dirname + "/src/index.html",
@@ -42,5 +43,11 @@ module.exports = {
       },
     ],
   },
-  plugins: [HtmlWebpackPluginConfig, new MiniCssExtractPlugin()],
+  plugins: [
+    HtmlWebpackPluginConfig,
+    new MiniCssExtractPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [{ from: "public" }],
+    }),
+  ],
 };

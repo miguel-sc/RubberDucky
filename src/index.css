@@ -42,6 +42,14 @@ a {
   margin: 5px 0 10px 0;
 }
 
+.impressum {
+  margin-top: 5px;
+}
+
+.impressum-link {
+  color: white;
+}
+
 .icons-container {
   display: flex;
   justify-content: center;
