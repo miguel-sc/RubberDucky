@@ -1,5 +1,5 @@
-import { Application } from "pixi.js";
-import LiquidfunSprite from "./LiquidfunSprite";
+import { Application, filters } from "pixi.js";
+import { LiquidfunMesh, threshold_filter } from "./LiquidfunMesh";
 import RubberDucky from "./RubberDucky";
 import {
   backgroundColor,
@@ -101,7 +101,7 @@ class App extends Application {
       s.destroy();
     }
     this.world.DestroyBody(this.boundingbox);
-    this.world.DestroyParticleSystem(this.particleSystemSprite.particleSystem);
+    this.world.DestroyParticleSystem(this.particleSystem);
     this.particleSystemSprite.destroy();
     this.sprites = [];
   }
@@ -149,9 +149,19 @@ class App extends Application {
   createParticleSystem() {
     const psd = new this.box2D.b2ParticleSystemDef();
     psd.set_radius(particleRadius);
-    const particleSystem = this.world.CreateParticleSystem(psd);
-    particleSystem.SetMaxParticleCount(maxParticleCount);
-    this.particleSystemSprite = new LiquidfunSprite(particleSystem);
+    this.particleSystem = this.world.CreateParticleSystem(psd);
+    this.particleSystem.SetMaxParticleCount(maxParticleCount);
+    this.particleSystemSprite = new LiquidfunMesh(this.particleSystem);
+    this.particleSystemSprite.filterArea = this.screen;
+    this.particleSystemSprite.filters = [
+      new filters.BlurFilter(3.5),
+      threshold_filter,
+    ];
+    this.particleSystemSprite.posArray = new Float32Array(
+      this.box2D.HEAPF32.buffer,
+      this.box2D.getPointer(this.particleSystem.GetPositionBuffer()),
+      this.particleSystem.GetParticleCount() * 2
+    );
     this.stage.addChild(this.particleSystemSprite);
   }
 
@@ -163,9 +173,7 @@ class App extends Application {
     shape.set_m_p(new this.box2D.b2Vec2(x, y));
     pgd.set_shape(shape);
 
-    const group = this.particleSystemSprite.particleSystem.CreateParticleGroup(
-      pgd
-    );
+    const group = this.particleSystem.CreateParticleGroup(pgd);
     return group;
   }
 }
