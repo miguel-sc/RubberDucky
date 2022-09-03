@@ -6,7 +6,7 @@ export const maxParticleCount = 5000;
 export const particleRadius = 0.02;
 
 // Colors
-export const backgroundColor = 0x04052e;
+export const backgroundColor = 0x0c4a6e;
 export const spriteColor = 0xffffff;
 
 // World Step function
