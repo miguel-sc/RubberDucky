@@ -1,6 +1,3 @@
-// Strength of gravity
-export const gravity = new Box2D.b2Vec2(0, 9.81);
-
 // Pixel to Meter ratio
 export const PTM = 200;
 

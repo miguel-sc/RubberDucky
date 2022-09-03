@@ -1,6 +1,4 @@
-import "./index.css";
-import "./favicon.ico";
-import "./lib/liquidfun/liquidfun.min.js";
+import Box2DFactory from "box2d-wasm";
 import App from "./App";
 
 function webgl_support() {
@@ -17,5 +15,13 @@ function webgl_support() {
 
 if (webgl_support()) {
   document.body.appendChild(App.view);
-  App.init();
+  Box2DFactory({
+    locateFile: (url) =>
+      new URL(
+        `../node_modules/box2d-wasm/dist/es/${url}`,
+        import.meta.url
+      ).toString(),
+  }).then((box2D) => {
+    App.init(box2D);
+  });
 }

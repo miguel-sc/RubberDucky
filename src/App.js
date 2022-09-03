@@ -2,7 +2,6 @@ import { Application } from "pixi.js";
 import LiquidfunSprite from "./LiquidfunSprite";
 import RubberDucky from "./RubberDucky";
 import {
-  gravity,
   backgroundColor,
   particleRadius,
   maxParticleCount,
@@ -20,7 +19,12 @@ class App extends Application {
   constructor(options) {
     super(options);
     this.renderer.render(this.stage);
-    this.world = new Box2D.b2World(gravity);
+  }
+
+  init(box2D) {
+    this.box2D = box2D;
+    const gravity = new this.box2D.b2Vec2(0, 9.81);
+    this.world = new this.box2D.b2World(gravity);
     this.sprites = [];
 
     this.ticker.add(() => {
@@ -55,9 +59,11 @@ class App extends Application {
       const y = event.touches[0].clientY - window.innerHeight / 2;
       this.applyLinearImpulse(x, y);
     });
+
+    this.initScene();
   }
 
-  init() {
+  initScene() {
     this.stage.position.set(window.innerWidth / 2, window.innerHeight / 2);
 
     this.createParticleSystem();
@@ -82,7 +88,7 @@ class App extends Application {
   resizeHandler() {
     this.destroyAll();
     this.renderer.resize(window.innerWidth, window.innerHeight);
-    this.init();
+    this.initScene();
   }
 
   destroyAll() {
@@ -105,31 +111,43 @@ class App extends Application {
     const count = this.particleGroup.GetParticleCount();
     x *= (clickImpulse / length) * count;
     y *= (clickImpulse / length) * count;
-    this.particleGroup.ApplyLinearImpulse(new Box2D.b2Vec2(x, y));
+    this.particleGroup.ApplyLinearImpulse(new this.box2D.b2Vec2(x, y));
   }
 
   createBoundingBox() {
-    const bd = new Box2D.b2BodyDef();
-    bd.set_position(new Box2D.b2Vec2(0, 0));
+    const bd = new this.box2D.b2BodyDef();
+    bd.set_position(new this.box2D.b2Vec2(0, 0));
     const boundingbox = this.world.CreateBody(bd);
 
     const x = this.renderer.width / 2 / PTM;
     const y = this.renderer.height / 2 / PTM;
-    const shape = new Box2D.b2EdgeShape();
+    const shape = new this.box2D.b2EdgeShape();
 
-    shape.Set(new Box2D.b2Vec2(-x, -y), new Box2D.b2Vec2(-x, y));
+    shape.SetTwoSided(
+      new this.box2D.b2Vec2(-x, -y),
+      new this.box2D.b2Vec2(-x, y)
+    );
     boundingbox.CreateFixture(shape, 0.0);
-    shape.Set(new Box2D.b2Vec2(-x, y), new Box2D.b2Vec2(x, y));
+    shape.SetTwoSided(
+      new this.box2D.b2Vec2(-x, y),
+      new this.box2D.b2Vec2(x, y)
+    );
     boundingbox.CreateFixture(shape, 0.0);
-    shape.Set(new Box2D.b2Vec2(x, y), new Box2D.b2Vec2(x, -y));
+    shape.SetTwoSided(
+      new this.box2D.b2Vec2(x, y),
+      new this.box2D.b2Vec2(x, -y)
+    );
     boundingbox.CreateFixture(shape, 0.0);
-    shape.Set(new Box2D.b2Vec2(x, -y), new Box2D.b2Vec2(-x, -y));
+    shape.SetTwoSided(
+      new this.box2D.b2Vec2(x, -y),
+      new this.box2D.b2Vec2(-x, -y)
+    );
     boundingbox.CreateFixture(shape, 0.0);
     return boundingbox;
   }
 
   createParticleSystem() {
-    const psd = new Box2D.b2ParticleSystemDef();
+    const psd = new this.box2D.b2ParticleSystemDef();
     psd.set_radius(particleRadius);
     const particleSystem = this.world.CreateParticleSystem(psd);
     particleSystem.SetMaxParticleCount(maxParticleCount);
@@ -138,11 +156,11 @@ class App extends Application {
   }
 
   spawnParticles(radius, x, y) {
-    const pgd = new Box2D.b2ParticleGroupDef();
-    const shape = new Box2D.b2CircleShape();
+    const pgd = new this.box2D.b2ParticleGroupDef();
+    const shape = new this.box2D.b2CircleShape();
 
     shape.set_m_radius(radius);
-    shape.set_m_p(new Box2D.b2Vec2(x, y));
+    shape.set_m_p(new this.box2D.b2Vec2(x, y));
     pgd.set_shape(shape);
 
     const group = this.particleSystemSprite.particleSystem.CreateParticleGroup(

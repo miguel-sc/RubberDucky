@@ -1,5 +1,6 @@
 import { ObjectRenderer, utils } from "pixi.js";
 import { PTM, spriteColor, blurRadius, blurThreshold } from "./Constants";
+import App from "./App";
 
 function highest2(v) {
   // compute the next highest power of 2 of 32-bit v
@@ -115,8 +116,8 @@ export default class LiquidfunRenderer extends ObjectRenderer {
       const pos_offset = sprite.particleSystem.GetPositionBuffer();
       // read memory into JS Array
       const raw_pos = new Float32Array(
-        Box2D.HEAPU8.buffer,
-        pos_offset.e,
+        App.box2D.HEAPU8.buffer,
+        App.box2D.getPointer(pos_offset),
         count * 2
       );
       // initalize new Array for corrected values
@@ -129,6 +130,7 @@ export default class LiquidfunRenderer extends ObjectRenderer {
       // upload data to gpu
       gl.bindBuffer(gl.ARRAY_BUFFER, sprite.pos_buffer);
       gl.bufferData(gl.ARRAY_BUFFER, position, gl.DYNAMIC_DRAW);
+
       const positionHandle = sprite.ball_shader.attributes.position.location;
       gl.enableVertexAttribArray(positionHandle);
       gl.vertexAttribPointer(positionHandle, 2, gl.FLOAT, false, 0, 0);

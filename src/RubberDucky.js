@@ -11,23 +11,23 @@ export default class RubberDucky extends Graphics {
   }
 
   createBody(x, y) {
-    const bd = new Box2D.b2BodyDef();
+    const bd = new App.box2D.b2BodyDef();
     bd.set_type(2);
-    bd.set_position(new Box2D.b2Vec2(x, y));
+    bd.set_position(new App.box2D.b2Vec2(x, y));
     const duck = App.world.CreateBody(bd);
 
-    const head = new Box2D.b2CircleShape();
-    head.set_m_p(new Box2D.b2Vec2(0.065, -0.065));
+    const head = new App.box2D.b2CircleShape();
+    head.set_m_p(new App.box2D.b2Vec2(0.065, -0.065));
     head.set_m_radius(0.09);
     duck.CreateFixture(head, 0.01);
 
-    const frontBody = new Box2D.b2CircleShape();
-    frontBody.set_m_p(new Box2D.b2Vec2(0.03, 0.065));
+    const frontBody = new App.box2D.b2CircleShape();
+    frontBody.set_m_p(new App.box2D.b2Vec2(0.03, 0.065));
     frontBody.set_m_radius(0.095);
     duck.CreateFixture(frontBody, 0.5);
 
-    const backBody = new Box2D.b2CircleShape();
-    backBody.set_m_p(new Box2D.b2Vec2(-0.07, 0.065));
+    const backBody = new App.box2D.b2CircleShape();
+    backBody.set_m_p(new App.box2D.b2Vec2(-0.07, 0.065));
     backBody.set_m_radius(0.095);
     duck.CreateFixture(backBody, 0.5);
 
