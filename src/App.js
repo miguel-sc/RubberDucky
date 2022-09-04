@@ -1,6 +1,7 @@
 import { Application, filters } from "pixi.js";
-import { LiquidfunMesh, threshold_filter } from "./LiquidfunMesh";
+import { LiquidfunMesh } from "./LiquidfunMesh";
 import RubberDucky from "./RubberDucky";
+import { thresholdFilter } from "./filters";
 import {
   backgroundColor,
   particleRadius,
@@ -67,14 +68,6 @@ class App extends Application {
     this.stage.position.set(window.innerWidth / 2, window.innerHeight / 2);
 
     this.createParticleSystem();
-    if (
-      window.innerWidth > widthBreakpoint &&
-      window.innerHeight > heightBreakpoint
-    ) {
-      this.particleGroup = this.spawnParticles(1.15, 0, 0);
-    } else {
-      this.particleGroup = this.spawnParticles(0.76, 0, 0);
-    }
 
     this.boundingbox = this.createBoundingBox();
     this.rubberDucky = new RubberDucky(
@@ -151,12 +144,30 @@ class App extends Application {
     psd.set_radius(particleRadius);
     this.particleSystem = this.world.CreateParticleSystem(psd);
     this.particleSystem.SetMaxParticleCount(maxParticleCount);
+
+    if (
+      window.innerWidth > widthBreakpoint &&
+      window.innerHeight > heightBreakpoint
+    ) {
+      this.particleGroup = this.spawnParticles(1.15, 0, 0);
+    } else {
+      this.particleGroup = this.spawnParticles(0.76, 0, 0);
+    }
+
     this.particleSystemSprite = new LiquidfunMesh(this.particleSystem);
     this.particleSystemSprite.filterArea = this.screen;
     this.particleSystemSprite.filters = [
       new filters.BlurFilter(3.5),
-      threshold_filter,
+      thresholdFilter,
     ];
+
+    const positions = new Float32Array(
+      this.box2D.HEAPF32.buffer,
+      this.box2D.getPointer(this.particleSystem.GetPositionBuffer()),
+      this.particleSystem.GetParticleCount() * 2
+    );
+
+    this.particleSystemSprite.geometry.getBuffer("position").update(positions);
 
     this.stage.addChild(this.particleSystemSprite);
   }
@@ -174,10 +185,9 @@ class App extends Application {
   }
 }
 
-// Singleton
 export default new App({
   width: window.innerWidth,
   height: window.innerHeight,
   antialias: false,
-  backgroundColor: backgroundColor,
+  backgroundColor,
 });
