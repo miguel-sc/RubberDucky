@@ -157,11 +157,7 @@ class App extends Application {
       new filters.BlurFilter(3.5),
       threshold_filter,
     ];
-    this.particleSystemSprite.posArray = new Float32Array(
-      this.box2D.HEAPF32.buffer,
-      this.box2D.getPointer(this.particleSystem.GetPositionBuffer()),
-      this.particleSystem.GetParticleCount() * 2
-    );
+
     this.stage.addChild(this.particleSystemSprite);
   }
 

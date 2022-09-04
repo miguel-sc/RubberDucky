@@ -73,23 +73,12 @@ export class LiquidfunMesh extends Mesh {
     );
 
     this.particleSystem = particleSystem;
-    this.pool = [];
     this.max = particleSystem.GetParticleCount();
+
     const posArray = new Float32Array(this.max * 2);
-
-    this.points = [];
-    this._realSize = 0;
-
     const posBuff = new Buffer(posArray, false, false);
 
     this.geometry.addAttribute("position", posBuff, 2, false, TYPES.FLOAT);
-
-    this.dirtyId = 0;
-    this.lastDirtyId = 0;
-  }
-
-  _onDirty() {
-    this.dirtyId++;
   }
 
   render(r) {
@@ -109,9 +98,6 @@ export class LiquidfunMesh extends Mesh {
     }
 
     this.geometry.getBuffer("position").update(position);
-
-    this.geometry.buffers.forEach((e) => e.update());
-    this.lastDirtyId = this.dirtyId;
 
     super.render(r);
   }
